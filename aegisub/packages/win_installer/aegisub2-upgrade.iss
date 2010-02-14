@@ -35,8 +35,8 @@
 #include "fragment_setupbase.iss"
 
 [Setup]
-OutputBaseFilename=Aegisub-2.1.8-upgrade
-VersionInfoDescription=Aegisub 2.1.8 upgrade
+OutputBaseFilename=Aegisub-2.1.9-upgrade
+VersionInfoDescription=Aegisub 2.1.9 upgrade
 DisableDirPage=yes
 
 
@@ -100,5 +100,6 @@ end;
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
 end;
+
 
 
