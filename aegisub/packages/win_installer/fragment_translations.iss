@@ -63,6 +63,8 @@ Source: ..\..\po\ko.mo;          DestDir: {app}\locale\ko;    DestName: aegisub.
 Source: ..\..\po\wxstd-ko.mo;    DestDir: {app}\locale\ko;    DestName: wxstd.mo;   Flags: ignoreversion; Components: i18n/ko
 Source: ..\..\po\pt_BR.mo;       DestDir: {app}\locale\pt_BR; DestName: aegisub.mo; Flags: ignoreversion; Components: i18n/pt_BR
 Source: ..\..\po\wxstd-pt_BR.mo; DestDir: {app}\locale\pt_BR; DestName: wxstd.mo;   Flags: ignoreversion; Components: i18n/pt_BR
+Source: ..\..\po\pl.mo;          DestDir: {app}\locale\pl;    DestName: aegisub.mo; Flags: ignoreversion; Components: i18n/pl
+Source: ..\..\po\wxstd-pl.mo;    DestDir: {app}\locale\pl;    DestName: wxstd.mo;   Flags: ignoreversion; Components: i18n/pl
 Source: ..\..\po\ru.mo;          DestDir: {app}\locale\ru;    DestName: aegisub.mo; Flags: ignoreversion; Components: i18n/ru
 Source: ..\..\po\wxstd-ru.mo;    DestDir: {app}\locale\ru;    DestName: wxstd.mo;   Flags: ignoreversion; Components: i18n/ru
 Source: ..\..\po\vi.mo;          DestDir: {app}\locale\ru;    DestName: aegisub.mo; Flags: ignoreversion; Components: i18n/vi
@@ -90,18 +92,9 @@ Name: i18n/hu;    Description: "Magyar nyelv (Hungarian)"; Types: full
 Name: i18n/it;    Description: "Italiano (Italian)"; Types: full
 Name: i18n/ja;    Description: "日本語 (Japanese)"; Types: full
 Name: i18n/ko;    Description: "한국어 (Korean)"; Types: full
+Name: i18n/pl;    Description: "Język polski (Polish)"; Types: full
 Name: i18n/ru;    Description: "Русский язык (Russian)"; Types: full
 Name: i18n/es;    Description: "Español (Spanish)"; Types: full
 Name: i18n/vi;    Description: "Tiếng Việt (Vietnamese)"; Types: full
-
-
-
-
-
-
-
-
-
-
 
 
