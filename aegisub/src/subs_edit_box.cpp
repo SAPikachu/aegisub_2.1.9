@@ -341,6 +341,23 @@ void SubsEditBox::UpdateGlobals () {
 	SetToLine(grid->GetFirstSelRow());
 }
 
+void SubsEditBox::SyncVideoWithSubsStub(wxCommandEvent& e)
+{
+	SyncVideoWithSubs(e.GetExtraLong());
+}
+
+void SubsEditBox::SyncVideoWithSubs(int n)
+{
+	if (VideoContext::Get()->IsLoaded()) {
+		VideoContext::Get()->Stop();
+		AssDialogue *cur = grid->GetDialogue(n);
+		if (cur) VideoContext::Get()->JumpToFrame(VFR_Output.GetFrameAtTime(cur->Start.GetMS(),true));
+	}
+}
+
+DECLARE_EVENT_TYPE(wxEVT_SYNC_VIDEO_WITH_SUBS, -1)
+
+DEFINE_EVENT_TYPE(wxEVT_SYNC_VIDEO_WITH_SUBS)
 
 //////////////////
 // Jump to a line
@@ -371,14 +388,16 @@ void SubsEditBox::SetToLine(int n,bool weak) {
 		else sync = _T("Sync video with subs");
 		
 		if (Options.AsBool(sync) == true) {
-			VideoContext::Get()->Stop();
-			AssDialogue *cur = grid->GetDialogue(n);
-			if (cur) VideoContext::Get()->JumpToFrame(VFR_Output.GetFrameAtTime(cur->Start.GetMS(),true));
+			wxCommandEvent event( wxEVT_SYNC_VIDEO_WITH_SUBS, GetId() );
+			event.SetEventObject( this );
+			event.SetExtraLong(n);
+			GetEventHandler()->AddPendingEvent( event );
 		}
 	}
 
 	TextEdit->EmptyUndoBuffer();
 }
+
 
 
 ///////////////
@@ -419,6 +438,8 @@ BEGIN_EVENT_TABLE(SubsEditBox, wxPanel)
 	EVT_BUTTON(BUTTON_COMMIT,SubsEditBox::OnButtonCommit)
 
 	EVT_SIZE(SubsEditBox::OnSize)
+
+	EVT_COMMAND(wxID_ANY, wxEVT_SYNC_VIDEO_WITH_SUBS, SubsEditBox::SyncVideoWithSubsStub)
 END_EVENT_TABLE()
 
 

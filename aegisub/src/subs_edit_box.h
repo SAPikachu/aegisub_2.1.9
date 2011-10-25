@@ -158,6 +158,8 @@ public:
 	void CommitText(bool weak=false);
 	void Update(bool timeOnly=false,bool weak=false);
 	void UpdateGlobals();
+	void SyncVideoWithSubs(int n);
+	void SyncVideoWithSubsStub(wxCommandEvent& e);
 	void SetToLine(int n,bool weak=false);
 	void UpdateFrameTiming();
 	void DoKeyPress(wxKeyEvent &event);
