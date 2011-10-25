@@ -546,7 +546,8 @@ found_timestamps:
 	}
 
 	if (state == 1 || state == 2) {
-		throw SRTParseError(L"Parsing SRT: Incomplete file", 0);
+		// seems this check is broken and make SRT files unopenable
+		// throw SRTParseError(wxString::Format(L"Parsing SRT: Incomplete file, state = %d", state), 0);
 	}
 
 	if (line) {
