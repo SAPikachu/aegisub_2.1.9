@@ -217,7 +217,7 @@ void FFmpegSourceAudioProvider::LoadAudio(wxString filename) {
 	switch (AudioInfo.BitsPerSample) {
 		case 8:		bytes_per_sample = 1; break;
 		case 16:	bytes_per_sample = 2; break;
-		case 24:	bytes_per_sample = 3; break;
+		case 24:	bytes_per_sample = 4; break; // always padded to 32!
 		case 32:	bytes_per_sample = 4; break;
 		default:
 			throw _T("FFmpegSource audio provider: unknown or unsupported sample format");
