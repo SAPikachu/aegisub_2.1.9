@@ -135,6 +135,46 @@ struct EndianSwapSampleConverter {
 	};
 };
 
+void DownsampleBitDepthTo16(void* src, short* destination, int64_t count, int src_bytes_per_sample, bool is_native_endian)
+{
+	// sanity check
+	if (src_bytes_per_sample <= 2)
+	{
+		throw _T("Input bitdepth is 16bit or less, something is wrong in the code!");
+	}
+	else if (src_bytes_per_sample > 8)
+	{
+		throw _T("Input bitdepth is 64bit or more, that is unsupported now.");
+	}
+	for (int64_t i = 0; i < count; i++)
+	{
+		int64_t sample = 0;
+		if (is_native_endian)
+		{
+#ifdef HAVE_LITTLE_ENDIAN
+			memcpy(&sample, src, src_bytes_per_sample);
+#else
+			memcpy(((char*)&sample) + (sizeof(int64_t) - src_bytes_per_sample), src, src_bytes_per_sample);
+#endif
+		} else {
+			for (int byte_index = 0; i < src_bytes_per_sample; i++)
+			{
+#ifdef HAVE_LITTLE_ENDIAN
+				*(((char*)&sample) + byte_index) = 
+					*(((char*)src) + (src_bytes_per_sample - byte_index - 1));
+#else
+				*(((char*)&sample) + sizeof(int64_t) - 1 - byte_index) = 
+					*(((char*)src) + byte_index);
+#endif
+			}
+		}
+
+		sample >>= ((src_bytes_per_sample - sizeof(short)) * 8);
+		*destination = (short)sample;
+		src = (char*)src + src_bytes_per_sample;
+		destination++;
+	}
+}
 
 /////////////
 // Get audio
@@ -156,6 +196,15 @@ void ConvertAudioProvider::GetAudio(void *destination, int64_t start, int64_t co
 		short *buffer2 = NULL;
 		short *last = NULL;
 
+		bool isNativeEndian = source->AreSamplesNativeEndian();
+
+		if (srcBps > 2)
+		{
+			fullSize *= srcBps;
+			// don't mess up the size, 
+			// just allocate more memory than needed
+		}
+
 		// Read audio
 		buffer1 = new short[fullSize * channels];
 		source->GetAudio(buffer1,start/sampleMult,srcCount);
@@ -172,14 +221,28 @@ void ConvertAudioProvider::GetAudio(void *destination, int64_t start, int64_t co
 			}
 		}
 
-		// Already 16-bit
-		else if (srcBps == 2) last = buffer1;
+		else if (srcBps == 2) {
+			// Already 16-bit
+			last = buffer1;
+		} else {
+			if (sampleMult == 1) {
+				DownsampleBitDepthTo16(buffer1,(short*)destination, srcCount * channels, srcBps, isNativeEndian);
+			}
+			else {
+				buffer2 = new short[fullSize * channels];
+				DownsampleBitDepthTo16(buffer1, buffer2, srcCount * channels, srcBps, isNativeEndian);
+				last = buffer2;
+			}
+
+			// endianness is corrected when converting bitdepth
+			isNativeEndian = true;
+		}
 
 		// Convert sample rate
-		if (sampleMult != 1 && source->AreSamplesNativeEndian()) {
+		if (sampleMult != 1 && isNativeEndian) {
 			ChangeSampleRate(last,(short*)destination,count * channels, NullSampleConverter());
 		}
-		else if (!source->AreSamplesNativeEndian()) {
+		else if (!isNativeEndian) {
 			ChangeSampleRate(last,(short*)destination,count * channels, EndianSwapSampleConverter());
 		}
 
@@ -199,10 +262,6 @@ AudioProvider *CreateConvertAudioProvider(AudioProvider *source_provider) {
 		provider->GetSampleRate() < 32000 ||
 		!provider->AreSamplesNativeEndian())
 	{
-		// @todo add support for more bitdepths (i.e. 24- and 32-bit audio)
-		if (provider->GetBytesPerSample() > 2)
-			throw _T("Audio format converter: audio with bitdepths greater than 16 bits/sample is currently unsupported");
-
 		provider = new ConvertAudioProvider(provider);
 	}
 
