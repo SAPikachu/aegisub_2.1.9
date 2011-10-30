@@ -62,6 +62,13 @@ int FFMS_CC FFmpegSourceProvider::UpdateIndexingProgress(int64_t Current, int64_
 	if (Progress->IndexingCanceled)
 		return 1;
 
+    if (Total == 0)
+    {
+        // bug in ffms2 or libav, just place some value to indicate we are still running
+        Total = 1024 * 1024 * 100;
+        Current = Current % Total;
+    }
+
 	// no one cares about a little bit of a rounding error here anyway
 	Progress->ProgressDialog->SetProgress(((int64_t)1000*Current)/Total, 1000);
 	
