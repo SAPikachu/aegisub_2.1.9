@@ -227,7 +227,17 @@ void FFmpegSourceVideoProvider::LoadVideo(wxString filename) {
 		ErrorMsg.Append(wxString::Format(_T("Failed to decode first frame: %s"), ErrInfo.Buffer));
 		throw ErrorMsg;
 	}
+	const wxString IgnoreSAROptionKey = _T("FFMpegSource Ignore Video SAR");
+	bool IgnoreSAR = false;
+	if (Options.IsDefined(IgnoreSAROptionKey))
+	{
+		IgnoreSAR = Options.AsBool(IgnoreSAROptionKey);
+	}
 	Width	= TempFrame->EncodedWidth;
+	if (!IgnoreSAR)
+	{
+		Width = (int)((double)Width * VideoInfo->SARNum / VideoInfo->SARDen + 0.5);
+	}
 	Height	= TempFrame->EncodedHeight;
 
 	if (FFMS_SetOutputFormatV(VideoSource, 1 << FFMS_GetPixFmt("bgra"), Width, Height, FFMS_RESIZER_BICUBIC, &ErrInfo)) {
