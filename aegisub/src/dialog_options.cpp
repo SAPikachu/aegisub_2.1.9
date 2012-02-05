@@ -190,6 +190,11 @@ DialogOptions::DialogOptions(wxWindow *parent)
 		wxComboBox *combo = new wxComboBox(filePage,-1,_T(""),wxDefaultPosition,wxDefaultSize,3,choices,wxCB_DROPDOWN | wxCB_READONLY);
 		Bind(combo,_T("Autoload linked files"));
 		fileSizer6->Add(combo,1,wxEXPAND);
+
+		fileSizer6->Add(new wxStaticText(filePage,-1,_("Save charset:")),0,wxRIGHT | wxALIGN_CENTRE_VERTICAL,5);
+		combo = new wxComboBox(filePage,-1,_T(""),wxDefaultPosition,wxDefaultSize,FrameMain::GetEncodings(),wxCB_DROPDOWN | wxCB_READONLY);
+		Bind(combo,_T("Save charset"),1);
+		fileSizer6->Add(combo,1,wxEXPAND);
 		fileSizer6->AddGrowableCol(1,1);
 
 		// Sizers
