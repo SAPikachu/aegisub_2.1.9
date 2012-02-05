@@ -112,7 +112,7 @@ void OptionsManager::LoadDefaults(bool onlyDefaults,bool doOverride) {
 	SetInt(_T("Autoload linked files"),2);
 	SetText(_T("Text actor separator"),_T(":"));
 	SetText(_T("Text comment starter"),_T("#"));
-	SetText(_T("Save charset"),_T("UTF-8"));
+	SetText(_T("Save charset"),_T("UTF-16"));
 	SetBool(_T("Use nonstandard milisecond times"),false);
 	SetBool(_T("Auto save on every change"),false);
 

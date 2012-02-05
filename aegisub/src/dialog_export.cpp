@@ -103,7 +103,7 @@ DialogExport::DialogExport (wxWindow *parent)
 	charset_list_sizer->Add(charset_list_label, 0, wxALIGN_CENTER | wxRIGHT, 5);
 	charset_list_sizer->Add(CharsetList, 1, wxEXPAND);
 	if (!CharsetList->SetStringSelection(Export->GetOriginalSubs()->GetScriptInfo(_T("Export Encoding")))) {
-		CharsetList->SetStringSelection(_T("UTF-8"));
+		CharsetList->SetStringSelection(_T("UTF-16"));
 	}
 
 	// Top sizer
