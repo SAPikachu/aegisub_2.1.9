@@ -103,6 +103,10 @@ struct VersionInfoStruct {
 		VersionNumber = _T("r") _T_int(BUILD_SVN_REVISION)
 # ifdef BUILD_SVN_LOCALMODS
 			_T("M")
+#  ifdef BUILD_LOCAL_REVISION
+			_T_int(BUILD_LOCAL_REVISION)
+#  endif
+
 # endif
 			;
 #endif
@@ -120,7 +124,7 @@ struct VersionInfoStruct {
 #ifdef BUILD_CREDIT
 			buildcred += _T(", "); buildcred += BuildCredit;
 #endif
-			ShortVersionString = wxString::Format(_T("%s (development version%s)"), VersionNumber, buildcred.c_str());
+			ShortVersionString = wxString::Format(_T("%s (development version, 2.1.9 codebase%s)"), VersionNumber, buildcred.c_str());
 			LongVersionString = ShortVersionString;
 		}
 
