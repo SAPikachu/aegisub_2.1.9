@@ -82,6 +82,8 @@ FFmpegSourceVideoProvider::FFmpegSourceVideoProvider(wxString filename) {
 	ErrInfo.SubType		= FFMS_ERROR_SUCCESS;
 	ErrorMsg = _T("FFmpegSource video provider: ");
 
+	ColorMatrix = _T("");
+
 	SetLogLevel();
 
 	// and here we go
@@ -239,11 +241,30 @@ void FFmpegSourceVideoProvider::LoadVideo(wxString filename) {
 	int CS = TempFrame->ColorSpace;
 	if (CS != FFMS_CS_RGB && (InputColorSpace == 1 || InputColorSpace == 2))
 	{
-		if (FFMS_SetInputFormatV(VideoSource, InputColorSpace == 1 ? FFMS_CS_BT470BG : FFMS_CS_BT709, FFMS_CR_UNSPECIFIED, FFMS_GetPixFmt(""), &ErrInfo))
+		CS = InputColorSpace == 1 ? FFMS_CS_BT470BG : FFMS_CS_BT709;
+		if (FFMS_SetInputFormatV(VideoSource, CS, FFMS_CR_UNSPECIFIED, FFMS_GetPixFmt(""), &ErrInfo))
 		{
 			ErrorMsg.Append(wxString::Format(_T("Failed to set input format: %s"), ErrInfo.Buffer));
 			throw ErrorMsg;
 		}
+	}
+	switch (CS)
+	{
+	case FFMS_CS_BT709:
+		ColorMatrix = _T("BT.709");
+		break;
+	case FFMS_CS_BT470BG:
+	case FFMS_CS_SMPTE170M:
+		ColorMatrix = _T("BT.601");
+		break;
+	case FFMS_CS_SMPTE240M:
+		ColorMatrix = _T("SMPTE-240M");
+		break;
+	case FFMS_CS_FCC:
+		ColorMatrix = _T("FCC");
+		break;
+	default:
+		ColorMatrix = _T("N/A");
 	}
 	const wxString IgnoreSAROptionKey = _T("FFMpegSource Ignore Video SAR");
 	bool IgnoreSAR = false;

@@ -176,3 +176,6 @@ wxString VideoProviderCache::GetWarning() {
 wxString VideoProviderCache::GetDecoderName() {
 	return master->GetDecoderName();
 }
+const wxString VideoProviderCache::GetColorMatrix() {
+	return master->GetColorMatrix();
+}

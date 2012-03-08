@@ -1038,6 +1038,10 @@ void FrameMain::SynchronizeProject(bool fromSubs) {
 		subs->SetScriptInfo(_T("VFR File"),MakeRelativePath(VFR_Output.GetFilename(),AssFile::top->filename));
 		subs->SetScriptInfo(_T("Keyframes File"),MakeRelativePath(VideoContext::Get()->GetKeyFramesName(),AssFile::top->filename));
 
+		// This is recorded for reference only, it won't affect video loading later
+		VideoProvider* provider = VideoContext::Get()->GetProvider();
+		subs->SetScriptInfo(_T("Video Color Matrix"), provider ? provider->GetColorMatrix() : _T(""));
+
 		// Store Automation script data
 		// Algorithm:
 		// 1. If script filename has Automation Base Path as a prefix, the path is relative to that (ie. "$")

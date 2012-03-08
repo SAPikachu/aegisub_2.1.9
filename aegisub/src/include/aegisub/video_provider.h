@@ -79,6 +79,8 @@ public:
 	virtual bool IsNativelyByFrames() { return true; };
 	virtual void OverrideFrameTimeList(std::vector<int> list) {}	// Override the list with the provided one, for VFR handling
 
+	virtual const wxString GetColorMatrix() { return L""; }
+
 	struct CancelVideoLoadException {
 		int dummy;
 	};

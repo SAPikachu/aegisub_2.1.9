@@ -92,4 +92,5 @@ public:
 	virtual bool NeedsVFRHack();
 	virtual wxString GetWarning();
 	virtual wxString GetDecoderName();
+	virtual const wxString GetColorMatrix();
 };

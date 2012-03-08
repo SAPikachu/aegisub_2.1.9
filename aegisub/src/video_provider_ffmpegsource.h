@@ -65,6 +65,8 @@ private:
 	FFMS_ErrorInfo ErrInfo;		/// FFMS error codes/messages
 	wxString ErrorMsg;			/// wx-ified error message
 
+	wxString ColorMatrix;
+
 	void LoadVideo(wxString filename);
 	void Close();
 
@@ -85,6 +87,7 @@ public:
 	FrameRate GetTrueFrameRate() { return Timecodes; };
 	wxString GetDecoderName() { return L"FFmpegSource"; }
 	int GetDesiredCacheSize() { return 8; }
+	const wxString GetColorMatrix() { return ColorMatrix; }
 };
 
 
