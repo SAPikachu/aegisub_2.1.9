@@ -355,8 +355,10 @@ DialogOptions::DialogOptions(wxWindow *parent)
 		wxSizer *videoMainSizer = new wxBoxSizer(wxVERTICAL);
 		wxSizer *videoSizer1 = new wxStaticBoxSizer(wxVERTICAL,videoPage,_("Options"));
 		wxSizer *videoSizer2 = new wxStaticBoxSizer(wxVERTICAL,videoPage,_("Advanced - EXPERT USERS ONLY"));
+		wxSizer *videoSizerFFMS = new wxStaticBoxSizer(wxVERTICAL,videoPage,_("FFMS advanced settings"));
 		wxFlexGridSizer *videoSizer3 = new wxFlexGridSizer(2,5,5);
 		wxFlexGridSizer *videoSizer4 = new wxFlexGridSizer(2,5,5);
+		wxFlexGridSizer *videoSizerFFMSInner = new wxFlexGridSizer(2,5,5);
 		wxControl *control;
 
 		// First sizer
@@ -416,12 +418,27 @@ DialogOptions::DialogOptions(wxWindow *parent)
 		videoSizer4->AddGrowableCol(1,1);
 #endif
 
+		// FFMS
+		control = new wxCheckBox(videoPage,-1,_("Ignore video SAR"));
+		Bind(control,_T("FFMpegSource Ignore Video SAR"));
+		videoSizerFFMSInner->Add(control,1,wxEXPAND);
+		videoSizerFFMSInner->AddGrowableCol(1,1);
+		videoSizerFFMSInner->Add(new wxStaticText(videoPage,-1,_T("")),1,wxEXPAND);
+
+		videoSizerFFMSInner->Add(new wxStaticText(videoPage,-1,_("Color matrix for YUV-RGB conversion: ")),0,wxALIGN_CENTER_VERTICAL | wxRIGHT,10);
+		wxString choices_matrix[3] = { _("Auto-detect"), _("Force BT.601 (match behavior of old VSFilter)"), _("Force BT.709") };
+		control = new wxComboBox(videoPage,-1,_T(""),wxDefaultPosition,wxDefaultSize,3,choices_matrix,wxCB_READONLY | wxCB_DROPDOWN);
+		Bind(control,_T("FFMpegSource Input ColorSpace"));
+		videoSizerFFMSInner->Add(control,1,wxEXPAND);
+
 		// Sizers
 		videoSizer1->Add(videoSizer3,1,wxEXPAND | wxALL,5);
 		videoSizer2->Add(new wxStaticText(videoPage,-1,_("WARNING: Changing these settings might result in bugs,\ncrashes, glitches and/or movax.\nDon't touch these unless you know what you're doing.")),0,wxEXPAND | wxALL,5);
 		videoSizer2->Add(videoSizer4,1,wxEXPAND | wxALL,5);
+		videoSizerFFMS->Add(videoSizerFFMSInner,1,wxEXPAND | wxALL,5);
 		videoMainSizer->Add(videoSizer1,0,wxEXPAND | wxALL,0);
 		videoMainSizer->Add(videoSizer2,0,wxEXPAND | wxTOP,5);
+		videoMainSizer->Add(videoSizerFFMS,0,wxEXPAND | wxTOP,5);
 		videoMainSizer->AddStretchSpacer(1);
 		videoPage->SetSizerAndFit(videoMainSizer);
 	}

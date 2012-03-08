@@ -181,6 +181,7 @@ void OptionsManager::LoadDefaults(bool onlyDefaults,bool doOverride) {
 	SetInt(_T("FFmpegSource always index all tracks"), true);
 	SetText(_T("FFmpegSource log level"), _T("quiet"));
 	SetBool(_T("FFMpegSource Ignore Video SAR"), false);
+	SetInt(_T("FFMpegSource Input ColorSpace"), 1);
 
 	// Audio Options
 	SetModificationType(MOD_AUTOMATIC);
