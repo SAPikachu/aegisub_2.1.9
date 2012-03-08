@@ -227,6 +227,24 @@ void FFmpegSourceVideoProvider::LoadVideo(wxString filename) {
 		ErrorMsg.Append(wxString::Format(_T("Failed to decode first frame: %s"), ErrInfo.Buffer));
 		throw ErrorMsg;
 	}
+	const wxString InputColorSpaceOptionKey = _T("FFMpegSource Input ColorSpace");
+	int InputColorSpace = 1;
+	// 0: Auto
+	// 1: BT.601
+	// 2: BT.709
+	if (Options.IsDefined(InputColorSpaceOptionKey))
+	{
+		InputColorSpace = Options.AsInt(InputColorSpaceOptionKey);
+	}
+	int CS = TempFrame->ColorSpace;
+	if (CS != FFMS_CS_RGB && (InputColorSpace == 1 || InputColorSpace == 2))
+	{
+		if (FFMS_SetInputFormatV(VideoSource, InputColorSpace == 1 ? FFMS_CS_BT470BG : FFMS_CS_BT709, FFMS_CR_UNSPECIFIED, FFMS_GetPixFmt(""), &ErrInfo))
+		{
+			ErrorMsg.Append(wxString::Format(_T("Failed to set input format: %s"), ErrInfo.Buffer));
+			throw ErrorMsg;
+		}
+	}
 	const wxString IgnoreSAROptionKey = _T("FFMpegSource Ignore Video SAR");
 	bool IgnoreSAR = false;
 	if (Options.IsDefined(IgnoreSAROptionKey))
@@ -240,7 +258,10 @@ void FFmpegSourceVideoProvider::LoadVideo(wxString filename) {
 	}
 	Height	= TempFrame->EncodedHeight;
 
-	if (FFMS_SetOutputFormatV(VideoSource, 1 << FFMS_GetPixFmt("bgra"), Width, Height, FFMS_RESIZER_BICUBIC, &ErrInfo)) {
+	int TargetFormats[2];
+	TargetFormats[0] = FFMS_GetPixFmt("bgra");
+	TargetFormats[1] = -1;
+	if (FFMS_SetOutputFormatV2(VideoSource, TargetFormats, Width, Height, FFMS_RESIZER_BICUBIC, &ErrInfo)) {
 		ErrorMsg.Append(wxString::Format(_T("Failed to set output format: %s"), ErrInfo.Buffer));
 		throw ErrorMsg;
 	}
